@@ -1,3 +1,27 @@
+/**
+ * Lisa Donohoo
+ * Prime Digital Academy
+ * April 5, 2024
+ */
+
+
+// Data structure model:
+
+// let calculations = [
+//       {firstOperand: 2,
+//        secondOperand: 1,
+//        operator: '+',
+//        result: 3
+//       }
+// ];
+
+
+// calculations data structure
+const calculation = [];
+
+
+
+// server information:
 const express = require('express');
 const app = express();
 let PORT = process.env.PORT || 5000;

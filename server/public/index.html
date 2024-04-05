@@ -10,13 +10,19 @@
     <h1>Server-Side Calculator</h1>
 
     <form data-testid="calculator">
-      <input data-testid="numOne" placeholder="First Number">
-      <button>+</button>
-      <button>-</button>
-      <button>*</button>
-      <button>/</button>
-      <input data-testid="numTwo" placeholder="Second Number">
-      <button>=</button>
+      <input id="first-number"
+             type="number" 
+             data-testid="numOne" 
+             placeholder="First Number">
+      <button onclick="addSelected()">+</button>
+      <button onclick="subractSelected()">-</button>
+      <button onclick="multiplySelected()">*</button>
+      <button onclick="divideSelected()">/</button>
+      <input id="second-number"
+             type="number"
+             data-testid="numTwo" 
+             placeholder="Second Number">
+      <button onclick="calculate(event)">=</button>
       <button>C</button>
     </form>
 
