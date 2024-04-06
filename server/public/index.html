@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Server-Side Calculator</title>  
-    <link src="stylesheet" href="styles/styles.css"/>
+    <link rel="stylesheet" href="styles/styles.css"/>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
     <script src="scripts/axios.js"></script>
     <script defer src="scripts/client.js" charset="utf-8"></script>
@@ -26,11 +26,16 @@
       <button onclick="calculate(event)">=</button>
       <button onclick="clearFields(event)">C</button>
     </form>
-    <section id="recent-result"
-            data-testid="recentResult">
+    <section id="result-section">
+      <h2>Result</h2>
+      <p id="recent-result"
+         data-testid="recentResult">
+      </p>
     </section>
-    <section data-testid="resultHistory">
-      <ul id="result-history">
+    <section id="history-section"
+             data-testid="resultHistory">
+      <h2>Calculation History</h2>
+      <ul id="calculation-history">
       </ul>
     </section>
   </body>

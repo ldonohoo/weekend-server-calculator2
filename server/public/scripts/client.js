@@ -6,12 +6,14 @@
 
 
 /**
- *  Set a global local variable to hold the current selected operator
+ *  Set a global client variable to hold the current selected operator
+ *      and a global client variable to see if first time screen rendered
  */
 let currentOperator = ' ';
 
+
 /**
- * Do an intial fetch of calculator data on page load
+ * Initial fetch of data from server on page load,
  */
 fetchCalculations();
 
@@ -104,17 +106,17 @@ function calculate(event) {
 function renderCalculations(calculations) {
     // get elements for render postions 
     let recentResultElement = document.getElementById('recent-result');
-    let resultHistoryElement = document.getElementById('result-history');
+    let calculationHistoryElement = document.getElementById('calculation-history');
     // render the current result to DOM
     recentResultElement.textContent = calculations[calculations.length-1].result;
     // clear the current history from the DOM before re-rendering list
-    resultHistoryElement.innerHTML = '';
+    calculationHistoryElement.innerHTML = '';
     // loop through the current calculation history
     //      - write a list item for each calculation in the history
     for (let calculation of calculations) {
         let HTMLstring = 
         `<li>${calculation.numOne} ${calculation.operator} ${calculation.numTwo} = ${calculation.result}</li>`
-        resultHistoryElement.innerHTML += HTMLstring;
+        calculationHistoryElement.innerHTML += HTMLstring;
     }
 }
 
@@ -144,6 +146,7 @@ function fetchCalculations() {
  * Clear the input values on the screen:
  *      - clear number1 and number2
  *      - clear out the selected operator
+ *      - clear out the current result field
  */
 function clearFields(event) {
     event.preventDefault();
@@ -155,4 +158,8 @@ function clearFields(event) {
     secondNumberElement.value = '';
     // reset the operator
     currentOperator = ' ';
+    // clear the result field as no current calculation now
+    let recentResultElement = document.getElementById('recent-result');
+    recentResultElement.textContent = '';
+
 }
