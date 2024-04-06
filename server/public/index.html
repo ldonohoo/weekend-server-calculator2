@@ -12,19 +12,19 @@
     <h1>Server-Side Calculator</h1>
     <form data-testid="calculator">
       <input id="first-number"
-             type="number" 
+             type="text" 
              data-testid="numOne" 
              placeholder="First Number">
-      <button onclick="addSelected()">+</button>
-      <button onclick="subractSelected()">-</button>
-      <button onclick="multiplySelected()">*</button>
-      <button onclick="divideSelected()">/</button>
+      <button onclick="addOperatorOn(event)">+</button>
+      <button onclick="subtractOperatorOn(event)">-</button>
+      <button onclick="multiplyOperatorOn(event)">*</button>
+      <button onclick="divideOperatorOn(event)">/</button>
       <input id="second-number"
-             type="number"
+             type="text"
              data-testid="numTwo" 
              placeholder="Second Number">
       <button onclick="calculate(event)">=</button>
-      <button onclick="clearFields()">C</button>
+      <button onclick="clearFields(event)">C</button>
     </form>
     <section id="recent-result"
             data-testid="recentResult">
