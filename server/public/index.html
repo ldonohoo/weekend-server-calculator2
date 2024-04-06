@@ -2,13 +2,14 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Server-Side Calculator</title>    
-    <script defer src="scripts/axios.js"></script>
+    <title>Server-Side Calculator</title>  
+    <link src="stylesheet" href="styles/styles.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>  
+    <script src="scripts/axios.js"></script>
     <script defer src="scripts/client.js" charset="utf-8"></script>
   </head>
   <body>
     <h1>Server-Side Calculator</h1>
-
     <form data-testid="calculator">
       <input id="first-number"
              type="number" 
@@ -23,15 +24,14 @@
              data-testid="numTwo" 
              placeholder="Second Number">
       <button onclick="calculate(event)">=</button>
-      <button>C</button>
+      <button onclick="clearFields()">C</button>
     </form>
-
-    <section data-testid="recentResult">
-      <!-- The most recent calculation result goes here. -->
+    <section id="recent-result"
+            data-testid="recentResult">
     </section>
-
     <section data-testid="resultHistory">
-      <!-- The list of calculation results goes here. -->
+      <ul id="result-history">
+      </ul>
     </section>
   </body>
 </html>

@@ -8,10 +8,10 @@
 // Data structure model:
 
 // let calculations = [
-//       {firstOperand: 2,
-//        secondOperand: 1,
+//       {firstNumber: 2,
+//        secondNumber: 1,
 //        operator: '+',
-//        result: 3
+//        answer: 3
 //       }
 // ];
 
@@ -24,7 +24,8 @@ const calculation = [];
 // server information:
 const express = require('express');
 const app = express();
-let PORT = process.env.PORT || 5000;
+
+let PORT = process.env.PORT || 5001;
 
 app.use(express.json());
 app.use(express.static('server/public'));
@@ -34,11 +35,51 @@ app.use(express.static('server/public'));
 let calculations = []
 
 
-// Here's a wonderful place to make some routes:
+// ROUTES ----------------------------------------------------------------
 
-// GET /calculations
 
-// POST /calculations
+
+// GET ROUTE with url of '/calculations' 
+//  (Tell the server what do DO when it RECIEVES a GET with /calculations)
+app.get('/calculations', (req, res) => {
+  console.log('GET /calculations received a request!');
+  // respond to the GET request by sending the calculations object
+  //    back to the client (with history and current results)
+  res.send(calculations);
+});
+
+
+// POST ROUTE with url of '/calculations' 
+//  (Tell the server what do DO when it RECIEVES a POST with /calculations)
+//      - update the the two numbers and the operand in out data structure
+//      - calculate the result and update the data structure
+//      - return the entire 'calculations' data structure so
+//          we can write results and calculation history to page
+app.post('/player_data', (req, res) => {
+  console.log('POST /calculations received a request!');
+  // grab the data passed to the server in req.body
+  let newCalculations = req.body;
+  let number1 = newCalculations.numOne;
+  let number2 = newCalculations.numTwo;
+  let operand = newCalculations.operator;
+  // calculate the answer to the calculator operation
+  let answer = calculateAnswer(number1, number2, operator);
+  // update the calculations data structure to store all data on server
+  //      by pushing a single calculation to calculations
+  let calculation = { numOne: number1,
+                      numTwo: number2,
+                      operator: operator,
+                      answer: answer };
+  calculations.push(calculation);
+  // Send back a HTTP status code to indicate that
+  //    this route did its job successfully!
+  res.sendStatus(201); //  Send "CREATED" back to client.
+});
+
+
+// end ROUTES ----------------------------------------------------------------
+
+
 
 
 // PLEASE DO NOT MODIFY ANY CODE BELOW THESE BEARS:
