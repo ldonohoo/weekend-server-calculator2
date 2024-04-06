@@ -10,22 +10,62 @@
   </head>
   <body>
     <h1>Server-Side Calculator</h1>
-    <form data-testid="calculator">
-      <input id="first-number"
-             type="text" 
-             data-testid="numOne" 
-             placeholder="First Number">
-      <button onclick="addOperatorOn(event)">+</button>
-      <button onclick="subtractOperatorOn(event)">-</button>
-      <button onclick="multiplyOperatorOn(event)">*</button>
-      <button onclick="divideOperatorOn(event)">/</button>
-      <input id="second-number"
-             type="text"
-             data-testid="numTwo" 
-             placeholder="Second Number">
-      <button onclick="calculate(event)">=</button>
-      <button onclick="clearFields(event)">C</button>
-    </form>
+    <p id="status-message"></p>
+    <!-- where the current calculations appear when you hit buttons -->
+    <p id="calculation-box"></p>
+    <!-- number buttons -->
+    <section id="calculator-buttons">
+      <button id= "number-1" 
+              type="button">1
+      </button>
+      <button id= "number-2" 
+              type="button">2
+      </button>
+      <button id= "number-3" 
+              type="button">3
+      </button>
+      <button id= "number-4" 
+              type="button">4
+      </button>
+      <button id= "number-5" 
+              type="button">5
+      </button>
+      <button id= "number-6" 
+              type="button">6
+      </button>
+      <button id= "number-7" 
+              type="button">7
+      </button>
+      <button id= "number-8" 
+              type="button">8
+      </button>
+      <button id= "number-9" 
+              type="button">9
+      </button>
+      <!-- operator buttons -->
+      <button id= "add-operator" 
+              type="button">+
+      </button>
+      <button id= "subtract-operator" 
+              type="button">-
+      </button>
+      <button id= "multiply-operator" 
+              type="button">×   
+      </button>
+      <button id= "divide-operator" 
+              type="button">÷
+      </button>
+      <!-- misc buttons -->
+      <button id= "decimal-point" 
+              type="button">.
+      </button>
+      <button id= "equals-sign"      
+              type="button">=
+      </button>
+      <button id= "all-clear" 
+              type="button">AC
+      </button>  
+    </section>
     <section id="result-section">
       <h2>Result</h2>
       <p id="recent-result"
@@ -37,6 +77,10 @@
       <h2>Calculation History</h2>
       <ul id="calculation-history">
       </ul>
+    </section>
+    <section id="extras-section">
+      <button id="clear-history-button" type="button">clear<br>history</button>
+      <p1>click calculation details to delete</p1>
     </section>
   </body>
 </html>

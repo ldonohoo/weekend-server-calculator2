@@ -6,16 +6,24 @@
 
 // Data structure model:-------------------------------------------------------
 
-// let calculations = [
-//       {firstNumber: 2,
-//        secondNumber: 1,
-//        operator: '+',
-//        result: 3
-//       }
+// let calculations = [ 
+//     { expression: [ {number: 5},
+//                     {operator: '+'},
+//                     {number: 5},
+//                     {operator: '-'},
+//                     {number: 2} ],
+//       result: 8 },
+//     { expression: [ {number: 5},
+//                     {operator: '*'},
+//                     {number: 4},
+//                     {operator: '-'},
+//                     {number: 2} ],
+//       result: 18 } 
 // ];
 
+
 // calculations data structure ------------------------------------------------
-const calculation = [];
+const calculations = [];
 
 
 function calculateResult(number1, number2, operator) {
@@ -48,9 +56,6 @@ let PORT = process.env.PORT || 5001;
 app.use(express.json());
 app.use(express.static('server/public'));
 
-// Global variable that will contain all of the
-// calculation objects:
-let calculations = []
 
 
 // ROUTES ----------------------------------------------------------------
@@ -77,18 +82,13 @@ app.get('/calculations', (req, res) => {
 app.post('/calculations', (req, res) => {
   console.log('POST /calculations received a request!');
   // grab the data passed to the server in req.body
-  let newCalculations = req.body;
-  let number1 = newCalculations.numOne;
-  let number2 = newCalculations.numTwo;
-  let operator = newCalculations.operator;
+  let newExpression = req.body;
   // calculate the result to the calculator operation
-  let result = calculateResult(number1, number2, operator);
+  let result = calculateResult(newExpression);
   // update the calculations data structure to store all data on server
   //      by pushing a single calculation to calculations
-  let calculation = { numOne: number1,
-                      numTwo: number2,
-                      operator: operator,
-                      result: result };
+  let calculation = { expression: newExpression,
+                       result: result };
   calculations.push(calculation);
   console.log(`POST complete, current value of calculations:`, calculations);
   // Send back a HTTP status code to indicate that
