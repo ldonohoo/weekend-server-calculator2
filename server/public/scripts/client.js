@@ -10,19 +10,23 @@ console.log('in client.js');
 let currentOperator = '+';
 
 
-function addSelected() {
+function addSelected(event) {
+    event.preventDefault();
     currentOperator = '+';
 }
 
-function subtractSelected() {
+function subtractSelected(event) {
+    event.preventDefault();
     currentOperator = '-';
 }
 
-function multiplySelected() {
+function multiplySelected(event) {
+    event.preventDefault();
     currentOperator = '*';
 }
 
-function divideSelected() {
+function divideSelected(event) {
+    event.preventDefault();
     currentOperator = '/';
 }
 
@@ -55,13 +59,13 @@ function renderCalculations(calculations) {
     // get elements for render postions 
     let recentResultElement = document.getElementById('recent-result');
     let resultHistoryElement = document.getElementById('result-history');
-    // render the current answer to DOM
-    recentResultElement.textContent = calculations.answer;
+    // render the current result to DOM
+    recentResultElement.textContent = calculations.result;
     // loop through the current calculation history
     //      - write a list item for each calculation in the history
     for (let calculation of calculations) {
         let HTMLstring = 
-        `<li>${calculations.numOne} ${calculations.operator} ${calculations.numTwo} = ${calculations.answer}}</li>`
+        `<li>${calculations.numOne} ${calculations.operator} ${calculations.numTwo} = ${calculations.result}}</li>`
         resultHistoryElement.innerHTML += HTMLstring;
     }
 }

@@ -11,7 +11,7 @@
 //       {firstNumber: 2,
 //        secondNumber: 1,
 //        operator: '+',
-//        answer: 3
+//        result: 3
 //       }
 // ];
 
@@ -19,6 +19,27 @@
 // calculations data structure
 const calculation = [];
 
+
+function calculateResult(number1, number2, operator) {
+  let number1 = Number(number1);
+  let number2 = Number(number2);
+  switch (operator) {
+    case '+':
+      return number1 + number2;
+      break;
+    case '-':
+      return number1 - number2;
+      break;
+    case '*':
+      return number1 * number2;
+      break;
+    case '/':
+      return number1 / number2;
+      break;
+    default:
+      return `error, invalid calculation, operator is: '${operator}'!`;
+  }
+}
 
 
 // server information:
@@ -55,21 +76,21 @@ app.get('/calculations', (req, res) => {
 //      - calculate the result and update the data structure
 //      - return the entire 'calculations' data structure so
 //          we can write results and calculation history to page
-app.post('/player_data', (req, res) => {
+app.post('/calculations', (req, res) => {
   console.log('POST /calculations received a request!');
   // grab the data passed to the server in req.body
   let newCalculations = req.body;
   let number1 = newCalculations.numOne;
   let number2 = newCalculations.numTwo;
   let operand = newCalculations.operator;
-  // calculate the answer to the calculator operation
-  let answer = calculateAnswer(number1, number2, operator);
+  // calculate the result to the calculator operation
+  let result = calculateResult(number1, number2, operator);
   // update the calculations data structure to store all data on server
   //      by pushing a single calculation to calculations
   let calculation = { numOne: number1,
                       numTwo: number2,
                       operator: operator,
-                      answer: answer };
+                      result: result };
   calculations.push(calculation);
   // Send back a HTTP status code to indicate that
   //    this route did its job successfully!
