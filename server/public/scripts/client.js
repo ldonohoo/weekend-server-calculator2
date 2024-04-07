@@ -39,8 +39,8 @@ let expressionString = '';
  *      - start of event listeners for calculator buttons, clear history buttons
  */
 fetchCalculations();
-document.getElementById('calculator-buttons').addEventListener(onclick, calculatorButtonPressed);
-document.getElementById('clear-history-button').addEventListener(onclick, clearHistory);
+document.getElementById('calculator-buttons').addEventListener("click", calculatorButtonPressed);
+document.getElementById('clear-history-button').addEventListener("click", deleteCalculationHistory);
 
 /*-------- Functions ---------------------------------------------------------*/
 
@@ -60,25 +60,27 @@ function validateInput() {
     //-----------------------------------------------------
     // initial check for empty/blank calculator input
     //-----------------------------------------------------
-    if (expressionString = '') {
+    if (expressionString === '') {
         return 'Error: You have not entered any calculations!'
     } 
+    console.log(expressionString);
     //-----------------------------------------------------
     // setup
     //-----------------------------------------------------
-    let inputString = expressionString;
+    //copy input string
+    let inputString = (' ' + expressionString);
+    inputString = inputString.slice(1);
     // to hold the current number to build a number object:
     let currentNumber = '';
-x   // to make sure operations start with a number first
-    let alreadyAddedNumber = false;
-    // to make sure numbers don't just have a decimal
+    // to make sure operations start with a number before an
+    // operator, and numbers don't just have a decimal
     let oneNumericCharacter = false;
     //-----------------------------------------------------
     // reformat whole string (blanks, operators)
     //-----------------------------------------------------
     // reformat multiplication and division operators
-    inputString.replace('×', '*');
-    inputString.replace('÷', '/');
+    inputString = inputString.replace('×', '*');
+    inputString = inputString.replace('÷', '/');
     // pull out blanks
     inputString.replace(' ', '');
     //-----------------------------------------------------
@@ -95,50 +97,63 @@ x   // to make sure operations start with a number first
     //   (this is where we create number & operator objects)
     //-------------------------------------------------------------
     // regular expressions to hold tests 
+    //-------------------------------------------------------------
     let isOperator = /[\+\-\*\/]/;  // is it any one of the four operators
     let isNumString = /[\d]/;  // is it a number 
+    //-------------------------------------------------------------
+    // loop through string by character
     for (i=0; i<inputString.length; i++) {
+        //-----------------------------------------------------------------
+        // set inital variables to make logic more readable
         let currChar = inputString[i];
+        let charIsOperator = (isOperator.test(currChar)) ? true : false;
+        let charIsDecimal =  (currChar === '.') ? true : false;
+        let charIsNumber = (isNumString.test(currChar)) ? true : false;
+        let lastCharInString = (i === inputString.length-1) ? true : false;
+        //----------------------------------------------------------------
         // IF a decimal point or a number, ADD to currentNumber string
-        if (currChar === '.' || isNumString.test(currChar)) {
+        if (charIsNumber || charIsDecimal) {
             currentNumber += currChar;
-            if (currChar !== '.') { 
+            if (charIsNumber) {
                 oneNumericCharacter = true;
-            } 
-        // IF an operator, (and there was a number first)
-        } else if (isOperator.test(currChar)) {
-            // make sure number came first
-            if (!alreadyAddedNumber) {
-                return 'Error: You must start calculation with a number!';
             }
-            // - CREATE operator object, add to expression array
-            expression.push({operator: currChar});
-        } else if (currChar === ' ') {
-        //IF a blank, ignore and keep going
+        // IF an operator, (and there was a number first)
+        } else if (charIsOperator) {
+            // make sure number came first
+            if (!oneNumericCharacter) {
+                return 'Error: You must have a number before an operator!';
+            }
+        // IF invalid character, display error message    
         } else {
             return 'Error: Invalid character, use only numbers and operators';
         }
         // If the current character is either:
         //         - an operator or 
         //         - the last character in the string
-        //      Bundle up the currentNumber, convert to number from string,
-        //      and add as object to the expression array
-        if (isOperator.test(currChar) || i === inputString.length-1) {
-            // if currentNumber has more than one decimal, error
-            if (currentNumber.count('.') > 1) {
+        //    THEN check for decimal errors and CREATE number object
+        if (charIsOperator || lastCharInString) {
+            // check for decimal errors:
+            // 1. if currentNumber has more than one decimal, error
+            let decimalPointCount = (inputString.match(/\./g) || []).length;
+            if (decimalPointCount > 1) {
                 return 'Error: you can only have one decimal per number.'
-            } else if (!oneNumericCharacter) {
-                return 'Error: you must have at least one numeric character in a decimal number.';
             }
-            let newNumber = Number(currentNumber);
+            // 2. if current number has a decimal but no numeric values
+            if (decimalPointCount === 1 && !oneNumericCharacter) {
+                return 'Error: you must have at least one numeric character in a decimal number.';
+            } 
             //  - CREATE number object, add to expression array
-            expression.push({number: newNumber});
-            alreadyAddedNumber = true;
+            expression.push({number: currentNumber});
             oneNumericCharacter = false;
             currentNumber = '';
         }
+        if (charIsOperator) {
+            // - CREATE operator object, add to expression array
+            expression.push({operator: currChar});
+        }
     }
-}
+} // end validateInput()
+
 
 
 
@@ -148,7 +163,7 @@ function highlightInputBox() {
     //          - (Second parameter to toggle() is the 'force' parameter,
     //             which creates a one-way 'ON' toggle. This will only
     //             toggle the class on, not off when true)
-    calcBoxElement.toggle('highlight-box', true);
+    calcBoxElement.classList.toggle('highlight-box', true);
 }
 
 /**
@@ -160,12 +175,14 @@ function displayMessage(message) {
 }
 
 function clearCalculatorDisplay() {
-                // clear the current calculation field on screen
-                document.getElementById('calculation-box') = '';
-                // and behind the scenes
-                expressionString = '';
-                // clear current result field
-                document.getElementById('recent-result').textContent = '';
+    // clear the current calculation field on screen 
+    let calcBoxElement = document.getElementById('calculation-box');
+    calcBoxElement.textContent = '';
+    // and behind the scenes
+    expressionString = '';
+    expression = [];
+    // clear current result field
+    document.getElementById('recent-result').textContent = '';
 }
 
 function clearUserIndicators() {
@@ -177,7 +194,7 @@ function clearUserIndicators() {
     //          - (Second parameter to toggle() is the 'force' parameter,
     //             which creates a one-way 'OFF' toggle. This will only
     //             toggle the class off, not on when false)
-    calcBoxElement.toggle('highlight-box', false);
+    calcBoxElement.classList.toggle('highlight-box', false);
 }
 
 
@@ -205,11 +222,16 @@ function calculatorButtonPressed(event) {
         // if it is not '=' or 'AC' buttons, add the resultant character to 
         //      the expressionString.
         default:
+            // if a different button is pressed, write result to expression string
+            //   and then render expression string to screen
             expressionString += currentCharacter;
+            let calculationBoxElement = document.getElementById('calculation-box');
+            calculationBoxElement.textContent = expressionString;
     }
 }
 
 function submitToCalculate() {
+    console.log('expression to post', expression);
     axios({
         method: 'POST',
         url: '/calculations',
@@ -234,17 +256,25 @@ function renderCalculations(calculations) {
     // get elements for render postions 
     let recentResultElement = document.getElementById('recent-result');
     let calculationHistoryElement = document.getElementById('calculation-history');
-    // render the current result to DOM
-    recentResultElement.textContent = calculations[calculations.length-1].result;
+    // if there's a current calculation, render the current result to DOM
+    if (calculations.length > 1) {
+        recentResultElement.textContent = calculations[calculations.length-1].result;
+    }
     // clear the current history from the DOM before re-rendering list
     calculationHistoryElement.innerHTML = '';
     // loop through the current calculation history
     //      - write a list item for each calculation in the history
-    for (let expression of calculations) {
-        let HTMLstring = `<li>`;
-        for (let expressionPart of expression) {
-            HTMLstring += `${expressionPart} `;
+    let HTMLstring = '';
+    for (let i=0; i<calculations.length; i++) {
+        HTMLstring = 
+            `<li data-index="${i}" onclick="deleteSingleCalculation(event)">`;
+        let calcExpression = calculations[i].expression;
+        for (let calcObject of calcExpression) {
+            for (const value of Object.values(calcObject)) {
+                HTMLstring += `${value} `;
+            }
         }
+        HTMLstring += '= ' + calculations[i].result;
         HTMLstring += '</li>';
         calculationHistoryElement.innerHTML += HTMLstring;
     }
@@ -293,3 +323,38 @@ function fetchCalculations() {
 //     recentResultElement.textContent = '';
 
 // }
+
+function deleteCalculationHistory() {
+    // clear the current history from the server
+    console.log('DELETE request from server')
+    axios({
+        method: 'DELETE',
+        url: '/calculations'
+    }).then((response) => {
+        // on successful delete:
+        clearCalculatorDisplay();
+        // and fetch the new calculations after the data is updated on server
+        //          --( fetchCalculations will update the DOM/screen
+        //              afterwards with a call to renderCalculations )
+        fetchCalculations();
+    });
+}
+
+function deleteSingleCalculation(event) {
+    let ElementToDelete = event.target;
+    let indexToDelete = ElementToDelete.getAttribute('data-index');
+    axios({
+        method: 'DELETE',
+        url: '/single_calculation', 
+        data: { indexToDelete: indexToDelete }
+    })
+    .then((response) => {
+        // on successful delete: 
+        clearCalculatorDisplay();
+        // and fetch the new calculations after the data is updated on server
+        //          --( fetchCalculations will update the DOM/screen
+        //              afterwards with a call to renderCalculations )
+        fetchCalculations();
+    });
+}
+
