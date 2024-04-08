@@ -25,7 +25,7 @@ let numberUsedWithDecimal = false;
  *                  {operator: '-'},
  *                  {number: 32.3}
  *          ]
- */
+ */ 
 let expression = [];
 
 // store input in string until parsed in validateInput function
