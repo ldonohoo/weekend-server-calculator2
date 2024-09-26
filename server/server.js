@@ -275,9 +275,6 @@ app.delete('/calculations', (req, res) => {
 
 // end ROUTES ----------------------------------------------------------------
 
-// PLEASE DO NOT MODIFY ANY CODE BELOW THESE BEARS:
-// 🐻  🐻‍❄️  🧸  🐻  🐻‍❄️  🧸  🐻  🐻‍❄️  🧸  🐻  🐻‍❄️  🧸
-
 // Makes it so you don't have to kill the server
 // on 5000 in order to run the tests:
 if (process.env.NODE_ENV === 'test') {

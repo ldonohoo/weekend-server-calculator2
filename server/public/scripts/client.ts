@@ -8,9 +8,9 @@
 
 // variable to *
 // varaiable to prevent multiple decimal points in one number
-let decimalUsed = false;
+let decimalUsed: boolean = false;
 // variable to prevent just a decimal (with no assoicated number) being entered
-let numberUsedWithDecimal = false;
+let numberUsedWithDecimal: boolean = false;
 
 /**
  * expression datastructure to store input:
@@ -26,10 +26,21 @@ let numberUsedWithDecimal = false;
  *                  {number: 32.3}
  *          ]
  */ 
-let expression = [];
+
+interface Expression {
+    number?: string;
+    operator?: string;
+}
+let expression: Expression[] = [];
+ 
+interface Calculation {
+    number?: string;
+    operator?: string;
+    result?: string;
+}
 
 // store input in string until parsed in validateInput function
-let expressionString = '';
+let expressionString: string = '';
 
 
 /*-------- Main logic on page load -------------------------------------------*/
@@ -39,7 +50,8 @@ let expressionString = '';
  *      - start of event listeners for calculator buttons, clear history buttons
  */
 fetchCalculations();
-document.getElementById('calculator-buttons').addEventListener("click", calculatorButtonPressed);
+let calcButtons = document.getElementById('calculator-buttons') as HTMLElement;
+calcButtons.addEventListener("click", calculatorButtonPressed);
 
 /*-------- Functions ---------------------------------------------------------*/
 
@@ -55,7 +67,7 @@ document.getElementById('calculator-buttons').addEventListener("click", calculat
  *            - each number has only one decimal
  *            - each number has at least one number
  */
-function parseAndValidateInput() {
+function parseAndValidateInput(): string | undefined {
     //-----------------------------------------------------
     // initial check for empty/blank calculator input
     //-----------------------------------------------------
@@ -67,17 +79,17 @@ function parseAndValidateInput() {
     // setup
     //-----------------------------------------------------
     //copy input string
-    let inputString = (' ' + expressionString);
+    let inputString: string = (' ' + expressionString);
     inputString = inputString.slice(1);
     // to hold the current number to build a number object:
-    let currentNumber = '';
+    let currentNumber: string = '';
     // to make sure operations start with a number before an
     // operator, and numbers don't just have a decimal
-    let oneNumericCharacter = false;
+    let oneNumericCharacter: boolean = false;
     //-----------------------------------------------------
     // reformat whole string (blanks, operators)
     //-----------------------------------------------------
-    function reformatString(inputString) {
+    function reformatString(inputString: string): string {
         let newString = ''
         for (let char of inputString) {
             if (char === '×') {
@@ -92,7 +104,7 @@ function parseAndValidateInput() {
         }
         return newString;
     }
-    let newString = reformatString(inputString);
+    let newString: string = reformatString(inputString);
     inputString = (' ' + newString);
     inputString = inputString.slice(1);
     console.log(inputString);
@@ -109,7 +121,7 @@ function parseAndValidateInput() {
     // whole string tests with regular expressions
     //-----------------------------------------------------
     // test for operators strung together: ( +++ +* -/ ) etc.
-    let twoPlusOperatorsTogether = /[\+\-\*\/]{2,}/g;
+    let twoPlusOperatorsTogether: RegExp = /[\+\-\*\/]{2,}/g;
     if (twoPlusOperatorsTogether.test(inputString)) {
         return `Invalid operation: operators must be separated by numbers`;
     }
@@ -120,11 +132,11 @@ function parseAndValidateInput() {
     //-------------------------------------------------------------
     // regular expressions to hold tests 
     //-------------------------------------------------------------
-    let isOperator = /[\+\-\*\/]/;  // is it any one of the four operators
-    let isNumString = /[\d]/;  // is it a number 
+    const isOperator: RegExp = /[\+\-\*\/]/;  // is it any one of the four operators
+    const isNumString: RegExp = /[\d]/;  // is it a number 
     //-------------------------------------------------------------
     // loop through string by character
-    for (i=0; i<inputString.length; i++) {
+    for (let i=0; i<inputString.length; i++) {
         //-----------------------------------------------------------------
         // set inital variables to make logic more readable
         let currChar = inputString[i];
@@ -182,8 +194,8 @@ function parseAndValidateInput() {
 /**
  * Hightlights the Calculator Expression Display by adding a class
  */
-function highlightInputBox() {
-    let calcBoxElement = document.getElementById('calculation-box');
+function highlightInputBox():void {
+    let calcBoxElement = document.getElementById('calculation-box') as HTMLElement;
     // toggle on the 'highlight-box' class
     //          - (Second parameter to toggle() is the 'force' parameter,
     //             which creates a one-way 'ON' toggle. This will only
@@ -194,8 +206,8 @@ function highlightInputBox() {
 /**
  * Display a message to the status message area on the screen
  */
-function displayMessage(message) {
-    let messageElement = document.getElementById('status-message');
+function displayMessage(message: string):void {
+    let messageElement = document.getElementById('status-message') as HTMLElement;
     messageElement.textContent = message;
 }
 
@@ -207,15 +219,16 @@ function displayMessage(message) {
  *        is POSTed to the server
  *      - clears the result box where the calculation result is displayed
  */
-function clearCalculator() {
+function clearCalculator():void {
     // clear the current calculation field on screen 
-    let calcBoxElement = document.getElementById('calculation-box');
+    let calcBoxElement = document.getElementById('calculation-box') as HTMLElement;
     calcBoxElement.textContent = '';
     // and behind the scenes
     expressionString = '';
     expression = [];
     // clear current result field
-    document.getElementById('recent-result').textContent = '';
+    let recentResultElement = document.getElementById('recent-result') as HTMLElement;
+    recentResultElement.textContent = '';
 }
 
 /**
@@ -223,11 +236,11 @@ function clearCalculator() {
  *      - sets the display message at the top of the screen to an empty string
  *      - clears any highlighting done with class .highlight-box
  */
-function clearUserIndicators() {
+function clearUserIndicators():void {
     // clear all messages
     displayMessage('');
     // get the calculation box element to clear any highlighting
-    let calcBoxElement = document.getElementById('calculation-box');
+    let calcBoxElement = document.getElementById('calculation-box') as HTMLElement;
     // toggle on the 'highlight-box' class
     //          - (Second parameter to toggle() is the 'force' parameter,
     //             which creates a one-way 'OFF' toggle. This will only
@@ -245,8 +258,8 @@ function clearUserIndicators() {
  *        can be called with a 'simulated' click when re-running individual
  *        calculations.  
  */
-function calculatorButtonPressed(event) {
-    let ElementPressed = event.target;
+function calculatorButtonPressed(event: Event):void {
+    let ElementPressed = event.target as HTMLElement;
     let currentButton = ElementPressed.innerText;
     processButton(currentButton);
 }
@@ -269,7 +282,7 @@ function calculatorButtonPressed(event) {
  *               - ignore the click!  (between the buttons in the 
  *                     calculation button section, etc.)
  */
-function processButton(currentButton) {
+function processButton(currentButton: string):void {
     // clears user msgs, highlighting, etc  (error msg clearing)
     clearUserIndicators();
     switch (currentButton) {
@@ -317,7 +330,7 @@ function processButton(currentButton) {
             // if a different button is pressed, write result to expression string
             //   and then render expression string to screen
             expressionString += currentButton;
-            let calculationBoxElement = document.getElementById('calculation-box');
+            let calculationBoxElement = document.getElementById('calculation-box') as HTMLElement;
             calculationBoxElement.textContent = expressionString;
         default:
             // click out side of buttons, do nothing
@@ -331,7 +344,7 @@ function processButton(currentButton) {
  *   
  *     -  after a successful POST, fetch the new calculations and render them
  */
-function submitToCalculate() {
+function submitToCalculate():void {
     console.log('expression to post', expression);
     axios({
         method: 'POST',
@@ -352,7 +365,7 @@ function submitToCalculate() {
  *      render both the current calculation result and the calculation
  *      history to the screen
  */
-function renderCalculations(calculations) {
+function renderCalculations(calculations: Calculation[]) {
     // get elements for render postions 
     let recentResultElement = document.getElementById('recent-result');
     let calculationHistoryElement = document.getElementById('calculation-history');
